@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public GameObject health1;
     public GameObject health2, health3;
     public Text scoreText;
+    public Text finalScoreText;
+    public Text highScoreText;
     public float health = 3;
     public float score;
 
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
         gameOverPanel.SetActive(false);
+        highScoreText.text = PlayerPrefs.GetInt("HighScore", 0).ToString();
     }
 
     // Update is called once per frame
@@ -67,30 +70,36 @@ public class GameManager : MonoBehaviour
     {
         if (health > 3)
             health = 3;
-            switch (health)
-            {
-                case 3:
-                    health1.gameObject.SetActive(true);
-                    health2.gameObject.SetActive(true);
-                    health3.gameObject.SetActive(true);
-                    break;
-                case 2:
-                    health1.gameObject.SetActive(true);
-                    health2.gameObject.SetActive(true);
-                    health3.gameObject.SetActive(false);
-                    break;
-                case 1:
-                    health1.gameObject.SetActive(true);
-                    health2.gameObject.SetActive(false);
-                    health3.gameObject.SetActive(false);
-                    break;
-            }
+        switch (health)
+        {
+            case 3:
+                health1.gameObject.SetActive(true);
+                health2.gameObject.SetActive(true);
+                health3.gameObject.SetActive(true);
+                break;
+            case 2:
+                health1.gameObject.SetActive(true);
+                health2.gameObject.SetActive(true);
+                health3.gameObject.SetActive(false);
+                break;
+            case 1:
+                health1.gameObject.SetActive(true);
+                health2.gameObject.SetActive(false);
+                health3.gameObject.SetActive(false);
+                break;
+        }
     }
 
     void CheckDeath()
     {
         if (health <= 0)
         {
+            finalScoreText.text = scoreText.text;
+            if (score > PlayerPrefs.GetFloat("HighScore", 0))
+            {
+                PlayerPrefs.SetFloat("HighScore", score);
+            }
+            highScoreText.text = "High Score : " + PlayerPrefs.GetFloat("HighScore", 0).ToString();
             Time.timeScale = 0;
             gameOverPanel.SetActive(true);
         }
