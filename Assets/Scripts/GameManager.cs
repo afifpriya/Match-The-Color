@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public Color activeColor;
     public Image buttonPanel;
     public GameObject gameOverPanel;
+    public GameObject pausePanel;
     [Header("Health")]
     public GameObject health1;
     public GameObject health2, health3;
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
     public float health = 3;
     public float score;
 
+    bool pause = false;
     Color currentColor;
 
     [HideInInspector]
@@ -27,6 +29,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
         gameOverPanel.SetActive(false);
+        pausePanel.SetActive(false);
         highScoreText.text = PlayerPrefs.GetInt("HighScore", 0).ToString();
     }
 
@@ -36,6 +39,14 @@ public class GameManager : MonoBehaviour
         CheckTouch();
         Health();
         CheckDeath();
+        if (Input.GetKeyDown(KeyCode.Escape) && !pause || Input.GetKeyDown(KeyCode.A) && !pause)
+        {
+            Pause();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && pause || Input.GetKeyDown(KeyCode.A) && pause)
+        {
+            Resume();
+        }
     }
 
     void CheckTouch()
@@ -122,4 +133,19 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void Pause()
+    {
+        pausePanel.SetActive(true);
+        Time.timeScale = 0;
+        pause = true;
+    }
+
+    public void Resume()
+    {
+        pausePanel.SetActive(false);
+        Time.timeScale = 1;
+        pause = false;
+    }
+
 }
